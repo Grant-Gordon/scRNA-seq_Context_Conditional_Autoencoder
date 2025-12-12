@@ -33,9 +33,9 @@ src/
 │   ├── CAE.py                      # Core model architecture
 │   └── context_classifier.py       # Metadata classifier
 ├── scripts/
-│   ├── main.py                     # Primary Python entrypoint
+│   ├── main.py                     # Primary Python entrypoint. Users will copy and edit the template to create this file
 │   ├── metadata_preprocessor.py
-│   ├── slurm_submission.sh         # SLURM job script (HPC entrypoint)
+│   ├── slurm_submission.sh         # SLURM job script,HPC entrypoint. Users will copy and edit the template to create this file
 │   ├── template_main.py            # Template for main.py with necessary vars labeled EDIT_ME
 │   └── template_slurm_submission.sh    # Template for slurm_submission.sh with necessary vars labeled EDIT_ME
 ```
