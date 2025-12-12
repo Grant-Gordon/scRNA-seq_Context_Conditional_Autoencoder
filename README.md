@@ -189,3 +189,101 @@ The model is explicitly **additive and interpretable**:
 
 The model also supports **counterfactual generation**, allowing expression profiles to be transformed across arbitrary combinations of metadata contexts.
 
+
+## Usage
+
+To train the model, there are only a handful of constants that must be changed before running; all of which are found within `scripts/template_main.py` and `scripts/template_slurm_submission.sh` (assuming this is being run on an HPC).
+
+ The user should use these templates to create untemplated versions that they will edit.  
+e.g. bash:`$cp template_main.py main.py`  
+Follow the steps below for which lines to edit. 
+
+---
+### 1) Edit `src/srcipts/main.py`
+
+* Edit the name of your data directory and the glob pattern your data files follow  
+(lines ~16-22)
+```
+#############################
+#Data
+OUTPUT_DIR=args.output_dir
+DATA_DIR="EDIT_ME" #Absolute path to dir containing data chunks
+META_GLOB="EDIT_ME" #.pkl glob  for metadata e.g. human_metadata_*.pkl
+EXPR_GLOB="EDIT_ME"  #.npz glob for expression data e.g. human_counts_1.npz
+```
+  
+---
+
+* Next edit where preprocessed metadata belongs, and which fields to process  
+(lines ~23-43)
+```
+    #Preprocessed metadata 
+    RERUN_PREPROCESSOR=True
+    PREPROCESSOR_DIR="EDIT_ME" #Path to preprocessed metadata (will be created if does not exist and RERUN_PREPROCESSOR=True)
+    META_FIELDS_VOCABS_FILE_NAME="metadata_vocab_.json" #Should be unique for each run if running experiments with different INCLUDE_FIELDS, or datasets
+    FIELD_SPECS_FILE_NAME="metadata_field_specs.json"#Should be unique for each run if running experiments with different INCLUDE_FIELDS or datasets
+    META_FIELDS_VOCABS_PATH=f"{PREPROCESSOR_DIR}/{META_FIELDS_VOCABS_FILE_NAME}"  # { field_name: { value: idx, ... }, ... }   
+    FIELD_SPECS_PATH=f"{PREPROCESSOR_DIR}/{FIELD_SPECS_FILE_NAME}"      #[ FieldSpec(field=..., cardinality=..., using=..., non_null_fraction=...), ... ]
+    INCLUDE_FIELDS=[
+        "EDIT_ME"
+        #Common default:
+        # "cell_type",
+        # "disease",
+        # "development_stage",
+        # "dev_stage",
+        # "sex",
+        # "self_reported_ethnicity",
+        # "tissue_general",
+        # "tissue",
+        # "assay"
+    ]
+```
+---
+* Lastly edit the training parameters for this experiment  
+(lines ~54-60)
+
+```
+#Training
+LEARNING_RATE="EDIT_ME" #e.g. 0.0001
+BATCH_SIZE="EDIT_ME" #e.g. 128
+NUM_EPOCHS="EDIT_ME" #e.g. 10
+BATCH_WORKERS="EDIT_ME" #e.g. 2 #how many threads are used to preload batches in dataloaders
+BATCH_PREFETCH_FACTOR="EDIT_ME" #e.g. 3 #how many batches each THREAD will attempt to preload into RAM in dataloaders
+#Model
+LATENT_DIM= "EDIT_ME" #e.g. 128
+```
+---
+
+### 2) Edit `src/srcipts/slurm_submission.sh`
+
+If you are running on an HPC you will likely also need to submit a slurm job. In theory training can be done exclusivly with the python entrypoint in `main.py` however, as this project was designed for HPC use, a SLURM entry point template has been provided as well. 
+
+_It is worth noting, different HPC's have differnt configurations and capabilities. The provided template may not work on a Users HPC._
+---
+* Lastly a User must simply edit the SBATCH directives, and project/venv paths
+---
+```
+#!/bin/bash
+#SBATCH --job-name=EDIT_ME
+#SBATCH --output=EDIT_ME/job-outputs/Job_%j-%x/%x.out
+#SBATCH --error=EDIT_ME/job-outputs/Job_%j-%x/%x.err
+#SBATCH --time=EDIT_ME
+#SBATCH --gpus-per-node=1
+#SBATCH --mem-per-gpu=EDIT_ME
+```
+
+---
+
+```
+PROJECT_ROOT_DIR=EDIT_ME #Base git repository e.g. /absolute/path/scRNA-seq_Context_Conditional_autoencoder
+```
+
+---
+
+
+```
+source EDIT_ME #venv e.g. /absoluete/path/venv/bin/activate
+```
+---
+
+### Training should now run with the cmd: `sbatch slurm_submission.sh`
