@@ -16,26 +16,29 @@ def main(raw_args=None):
     #############################
     #Data
     OUTPUT_DIR=args.output_dir
-    DATA_DIR="/mnt/projects/debruinz_project/july2024_census_data/subset"
-    META_GLOB="human_metadata_*.pkl"
-    EXPR_GLOB="human_counts_*.npz" 
+    DATA_DIR="EDIT_ME" #Absolute path to dir containing data chunks
+    META_GLOB="EDIT_ME" #.pkl glob  for metadata e.g. human_metadata_*.pkl
+    EXPR_GLOB="EDIT_ME"  #.npz glob for expression data e.g. human_counts_1.npz
+    
     #Preprocessed metadata 
     RERUN_PREPROCESSOR=True
-    PREPROCESSOR_DIR="/mnt/home/gordongr/research/scRNA-seq_Context_Conditional_Autoencoder/Preprocessed_metadata"
-    META_FIELDS_VOCABS_FILE_NAME="metadata_vocab_subset_default_9.json"
-    FIELD_SPECS_FILE_NAME="metadata_field_specs_subset_default_9.json"
+    PREPROCESSOR_DIR="EDIT_ME" #Path to preprocessed metadata (will be created if does not exist and RERUN_PREPROCESSOR=True)
+    META_FIELDS_VOCABS_FILE_NAME="metadata_vocab_.json" #Should be unique for each run if running experiments with different INCLUDE_FIELDS, or datasets
+    FIELD_SPECS_FILE_NAME="metadata_field_specs.json"#Should be unique for each run if running experiments with different INCLUDE_FIELDS or datasets
     META_FIELDS_VOCABS_PATH=f"{PREPROCESSOR_DIR}/{META_FIELDS_VOCABS_FILE_NAME}"  # { field_name: { value: idx, ... }, ... }   
     FIELD_SPECS_PATH=f"{PREPROCESSOR_DIR}/{FIELD_SPECS_FILE_NAME}"      #[ FieldSpec(field=..., cardinality=..., using=..., non_null_fraction=...), ... ]
     INCLUDE_FIELDS=[
-        "cell_type",
-        "disease",
-        "development_stage",
-        "dev_stage",
-        "sex",
-        "self_reported_ethnicity",
-        "tissue_general",
-        "tissue",
-        "assay"
+        "EDIT_ME"
+        #Common default:
+        # "cell_type",
+        # "disease",
+        # "development_stage",
+        # "dev_stage",
+        # "sex",
+        # "self_reported_ethnicity",
+        # "tissue_general",
+        # "tissue",
+        # "assay"
     ]
     PREPROCESSOR_ARGS=[
         '--data-dir', f'{DATA_DIR}',
@@ -49,13 +52,13 @@ def main(raw_args=None):
         PREPROCESSOR_ARGS+= ["--include", f]
 
     #Training
-    LEARNING_RATE=0.0001
-    BATCH_SIZE=128
-    NUM_EPOCHS=10
-    BATCH_WORKERS=2
-    BATCH_PREFETCH_FACTOR=3
+    LEARNING_RATE="EDIT_ME" #e.g. 0.0001
+    BATCH_SIZE="EDIT_ME" #e.g. 128
+    NUM_EPOCHS="EDIT_ME" #e.g. 10
+    BATCH_WORKERS="EDIT_ME" #e.g. 2 #how many threads are used to preload batches in dataloaders
+    BATCH_PREFETCH_FACTOR="EDIT_ME" #e.g. 3 #how many batches each THREAD will attempt to preload into RAM in dataloaders
     #Model
-    LATENT_DIM=128
+    LATENT_DIM= "EDIT_ME" #e.g. 128
 
     #############################
     if RERUN_PREPROCESSOR:
