@@ -202,6 +202,7 @@ Follow the steps below for which lines to edit.
 
 ---
 ### 1) Edit `src/srcipts/main.py`
+Start by copying the and renaming the `template_main.py` to `main.py`. This is the Python entry point, and SSOT for training configuration. 
 
 * Edit the name of your data directory and the glob pattern your data files follow  
 (lines ~16-22)
@@ -260,10 +261,12 @@ LATENT_DIM= "EDIT_ME" #e.g. 128
 
 If you are running on an HPC you will likely also need to submit a slurm job. In theory training can be done exclusivly with the python entrypoint in `main.py` however, as this project was designed for HPC use, a SLURM entry point template has been provided as well. 
 
-*It is worth noting, different HPC's have differnt configurations and capabilities. The provided template may not work on a Users HPC.*
+***It is worth noting, different HPC's have differnt configurations and capabilities. The provided template may not work on a given users HPC setup.***
+
+Similar to `main.py`,  start by copying the `template_slurm_submission.sh` and renaming it. This is the Bash/HPC entry point that will be `sbatch`-ed. 
 
 ---
-* Lastly a User must simply edit the SBATCH directives, and project/venv paths
+* User must simply edit the SBATCH directives, and project/venv paths to match thier HPC setup. 
 ---
 ```
 #!/bin/bash
