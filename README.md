@@ -1,4 +1,5 @@
 # Context-Conditioned Cycle Autoencoder for scRNA-seq
+[Jump to Usage section](#usage)
 
 ## Overview
 
@@ -25,18 +26,19 @@ At a high level, the model:
 
 ```text
 src/
-├── dataloader.py              # Chunk-level and batch-level datasets
-├── trainer.py                 # Training loop and optimizer logic
-├── logging_helpers.py         # TensorBoard + logging utilities
+├── dataloader.py                   # Chunk-level and batch-level datasets
+├── trainer.py                      # Training loop and optimizer logic
+├── logging_helpers.py              # TensorBoard + logging utilities
 ├── models/
-│   ├── CAE.py                 # Core model architecture
-│   └── context_classifier.py  # Metadata classifier
+│   ├── CAE.py                      # Core model architecture
+│   └── context_classifier.py       # Metadata classifier
 ├── scripts/
-│   ├── main.py                # Primary Python entrypoint
+│   ├── main.py                     # Primary Python entrypoint
 │   ├── metadata_preprocessor.py
-│   └── slurm_submission.sh    # SLURM job script (HPC entrypoint)
+│   ├── slurm_submission.sh         # SLURM job script (HPC entrypoint)
+│   ├── template_main.py            # Template for main.py with necessary vars labeled EDIT_ME
+│   └── template_slurm_submission.sh    # Template for slurm_submission.sh with necessary vars labeled EDIT_ME
 ```
-
 Typical run-time–generated directories (not versioned):
 
 * `job-outputs/` – training outputs, logs, TensorBoard files
@@ -190,12 +192,12 @@ The model is explicitly **additive and interpretable**:
 The model also supports **counterfactual generation**, allowing expression profiles to be transformed across arbitrary combinations of metadata contexts.
 
 
-## Usage
+# Usage
 
 To train the model, there are only a handful of constants that must be changed before running; all of which are found within `scripts/template_main.py` and `scripts/template_slurm_submission.sh` (assuming this is being run on an HPC).
 
  The user should use these templates to create untemplated versions that they will edit.  
-e.g. bash:`$cp template_main.py main.py`  
+e.g. bash: `cp template_main.py main.py`  
 Follow the steps below for which lines to edit. 
 
 ---
@@ -209,7 +211,7 @@ Follow the steps below for which lines to edit.
 OUTPUT_DIR=args.output_dir
 DATA_DIR="EDIT_ME" #Absolute path to dir containing data chunks
 META_GLOB="EDIT_ME" #.pkl glob  for metadata e.g. human_metadata_*.pkl
-EXPR_GLOB="EDIT_ME"  #.npz glob for expression data e.g. human_counts_1.npz
+EXPR_GLOB="EDIT_ME"  #.npz glob for expression data e.g. human_counts_*.npz
 ```
   
 ---
@@ -254,11 +256,12 @@ LATENT_DIM= "EDIT_ME" #e.g. 128
 ```
 ---
 
-### 2) Edit `src/srcipts/slurm_submission.sh`
+### 2) Edit `src/srcipts/slurm_submission.sh` ###
 
 If you are running on an HPC you will likely also need to submit a slurm job. In theory training can be done exclusivly with the python entrypoint in `main.py` however, as this project was designed for HPC use, a SLURM entry point template has been provided as well. 
 
-_It is worth noting, different HPC's have differnt configurations and capabilities. The provided template may not work on a Users HPC._
+*It is worth noting, different HPC's have differnt configurations and capabilities. The provided template may not work on a Users HPC.*
+
 ---
 * Lastly a User must simply edit the SBATCH directives, and project/venv paths
 ---
