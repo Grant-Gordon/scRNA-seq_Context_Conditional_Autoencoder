@@ -7,6 +7,8 @@ This repository implements a **cycle-consistency autoencoder (CAE)** for single-
 
 The core goal of the project is to build an **interpretable, additive model** of how different metadata contexts contribute to gene expression, while also enabling **counterfactual generation** (e.g. transforming a cell from one biological context to another).
 
+<img src="./scRNAseq_TWAEnc.svg" alt="Alt Text" width="1000">
+
 ---
 
 ## High-level Model Description
